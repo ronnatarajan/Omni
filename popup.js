@@ -1,21 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-  let screenshotDataUrl = null;
+  document.getElementById("googleSignIn").addEventListener("click", function () {
+      chrome.runtime.sendMessage({ action: "get_google_token" });
+  });
 
-  // Capture Screenshot
-  document.getElementById("capture").addEventListener("click", function () {
-      chrome.runtime.sendMessage({ action: "take_screenshot" }, (response) => {
-          if (response.screenshot) {
-              screenshotDataUrl = response.screenshot;
-
-              // Open the cropping window
-              chrome.runtime.sendMessage({
-                  action: "open_cropper",
-                  image: screenshotDataUrl
-              });
-
-              // Close the popup
-              window.close();
-          }
-      });
+  document.getElementById("captureScreen").addEventListener("click", function () {
+      chrome.runtime.sendMessage({ action: "capture_screen" });
   });
 });

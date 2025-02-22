@@ -1,55 +1,45 @@
-let cropperWindowId = null; // Store the cropping window ID
+// Function to get Google OAuth token
+function getGoogleOAuthToken() {
+  chrome.identity.getAuthToken({ interactive: true }, function (token) {
+      if (chrome.runtime.lastError) {
+          console.error("Google OAuth failed:", chrome.runtime.lastError);
+          return;
+      }
+      console.log("Google OAuth token:", token);
 
+      // Store token in Chrome storage
+      chrome.storage.local.set({ google_token: token }, function () {
+          console.log("Stored Google Calendar token.");
+      });
+  });
+}
+
+// Function to capture a screenshot
+function captureScreenshot() {
+  chrome.tabs.captureVisibleTab(null, { format: "png" }, function (screenshotUrl) {
+      if (chrome.runtime.lastError) {
+          console.error("Screenshot capture failed:", chrome.runtime.lastError);
+          return;
+      }
+
+      console.log("Screenshot captured:", screenshotUrl);
+
+      // Open the cropper window with the screenshot
+      chrome.windows.create({
+          url: `cropper.html?image=${encodeURIComponent(screenshotUrl)}`,
+          type: "popup",
+          width: 800,
+          height: 600
+      });
+  });
+}
+
+// Listen for messages from popup.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "take_screenshot") {
-        chrome.tabs.captureVisibleTab(null, { format: "png" }, (dataUrl) => {
-            sendResponse({ screenshot: dataUrl });
-        });
-        return true;
-    }
-
-    if (request.action === "open_cropper") {
-        chrome.windows.create({
-            url: `cropper.html?image=${encodeURIComponent(request.image)}`,
-            type: "popup",
-            width: 1000,
-            height: 800
-        }, function (window) {
-            cropperWindowId = window.id; // Store cropping window ID
-        });
-    }
-
-    if (request.action === "send_to_api") {
-        fetch("https://your-api-endpoint.com/process-image", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ image: request.croppedImage })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("API Response:", data);
-            sendResponse({ success: true });
-        })
-        .catch(error => {
-            console.error("API Error:", error);
-            sendResponse({ success: false, error: error });
-        });
-
-        if (cropperWindowId) {
-            // Check if the window still exists before removing it
-            chrome.windows.get(cropperWindowId, function (window) {
-                if (chrome.runtime.lastError) {
-                    console.warn("Cropping window was already closed.");
-                } else {
-                    chrome.windows.remove(cropperWindowId, () => {
-                        cropperWindowId = null;
-                    });
-                }
-            });
-        }
-
-        return true; // Keeps the async response alive
-    }
+  if (request.action === "get_google_token") {
+      getGoogleOAuthToken();
+  }
+  if (request.action === "capture_screen") {
+      captureScreenshot();
+  }
 });

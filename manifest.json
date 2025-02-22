@@ -1,18 +1,26 @@
 {
   "manifest_version": 3,
-  "name": "Cropper with Popup Window",
+  "name": "Omni Screenshot to Calendar",
   "version": "1.0",
-  "description": "Capture a screenshot and crop it using Cropper.js.",
-  "permissions": ["storage", "activeTab", "scripting", "tabs", "windows"],
+  "permissions": [
+      "identity",
+      "storage",
+      "activeTab",
+      "scripting"
+  ],
   "host_permissions": ["<all_urls>"],
+  "oauth2": {
+      "client_id": "86367282394-rmq233nk1mcf1du6es2olh66a5h2fbvo.apps.googleusercontent.com",
+      "scopes": ["email", "https://www.googleapis.com/auth/calendar.events"]
+  },
+  "background": {
+      "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
       "128": "icons/icon.png"
     }
-  },
-  "background": {
-    "service_worker": "background.js"
   },
   "web_accessible_resources": [
     {

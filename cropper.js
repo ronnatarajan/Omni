@@ -1,50 +1,48 @@
-let cropper;
+window.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const imageUrl = params.get("image");
 
-document.addEventListener("DOMContentLoaded", function () {
-    const imageElement = document.getElementById("cropImage");
+  const image = document.getElementById("imageToCrop");
+  image.src = decodeURIComponent(imageUrl);
 
-    // Get the image URL from query parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const imageUrl = urlParams.get("image");
+  // Wait for the image to load before initializing Cropper
+  image.onload = function () {
+      const cropper = new Cropper(image, {
+          aspectRatio: 0,
+          viewMode: 2, // Ensure the whole image fits in the window
+          autoCropArea: 1, // Ensure the default crop area is large
+          responsive: true,
+          background: false,
+          scalable: false, 
+          zoomable: true,
+          movable: false
+      });
+  };
 
-    if (imageUrl) {
-        imageElement.src = imageUrl;
+  document.getElementById("confirmCrop").addEventListener("click", () => {
+      const croppedCanvas = cropper.getCroppedCanvas();
+      const croppedImage = croppedCanvas.toDataURL("image/png").split(",")[1]; // Remove Base64 prefix
 
-        // Wait for the image to load before initializing Cropper.js
-        imageElement.onload = function () {
-            cropper = new Cropper(imageElement, {
-                aspectRatio: 0, 
-                viewMode: 2, 
-                autoCropArea: 1,
-                scalable: false, 
-                zoomable: true,
-                movable: false,
-                background: false
-            });
-        };
-    }
+      // Retrieve stored Google OAuth token
+      chrome.storage.local.get(["google_token"], function (data) {
+          if (!data.google_token) {
+              console.error("No Google OAuth token found.");
+              return;
+          }
 
-    // Confirm crop and send the image to API
-    document.getElementById("confirmCrop").addEventListener("click", function () {
-        if (cropper) {
-            const croppedCanvas = cropper.getCroppedCanvas();
-            if (croppedCanvas) {
-                const croppedDataUrl = croppedCanvas.toDataURL("image/png");
+          fetch("http://127.0.0.1:5000/upload_image", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                  image: croppedImage,
+                  token: data.google_token
+              })
+          })
+          .then(response => response.json())
+          .then(data => console.log("API Response:", data))
+          .catch(error => console.error("API Error:", error));
 
-                // Send image to API via background script
-                chrome.runtime.sendMessage({
-                    action: "send_to_api",
-                    croppedImage: croppedDataUrl
-                });
-
-                // Close the cropping window
-                window.close();
-            }
-        }
-    });
-
-    // Cancel cropping and close only the cropping window
-    document.getElementById("cancelCrop").addEventListener("click", function () {
-        window.close();
-    });
+          window.close();
+      });
+  });
 });
