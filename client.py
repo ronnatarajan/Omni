@@ -42,7 +42,7 @@ def get_completion(client, model_id, messages, args):
 
 def main():
     parser = argparse.ArgumentParser(description="OpenAI Client CLI")
-
+    
     parser.add_argument(
         "--model",
         type=str,
@@ -96,12 +96,6 @@ def main():
     parser.add_argument("--stop", type=str, default=None)
     parser.add_argument("--seed", type=int, default=None)
 
-    # Prompting
-    parser.add_argument(
-        "--prompt",
-        type=str,
-        help="The user prompt for the chat completion",
-    )
     parser.add_argument(
         "--system-prompt",
         type=str,
@@ -109,15 +103,11 @@ def main():
         help="The system prompt for the chat completion",
     )
 
-    # UI options
     parser.add_argument(
         "--no-stream",
         dest="stream",
         action="store_false",
         help="Disable streaming of response chunks",
-    )
-    parser.add_argument(
-        "--chat", action="store_true", help="Enable interactive chat mode"
     )
 
     args = parser.parse_args()
@@ -129,25 +119,8 @@ def main():
     prefix = workspace + (f"-{environment}" if environment else "")
 
     client.base_url = f"https://{prefix}--{args.app_name}-{args.function_name}.modal.run/v1"
-
-    if args.model:
-        model_id = args.model
-        print(
-            Colors.BOLD,
-            f"🧠: Using model {model_id}. This may trigger a model load on first call!",
-            Colors.END,
-            sep="",
-        )
-    else:
-        print(
-            Colors.BOLD,
-            f"🔎: Looking up available models on server at {client.base_url}. This may trigger a model load!",
-            Colors.END,
-            sep="",
-        )
-        model = client.models.list().data[0]
-        model_id = model.id
-        print(Colors.BOLD, f"🧠: Using {model_id}", Colors.END, sep="")
+    model = client.models.list().data[0]
+    model_id = model.id
 
     # Default structured prompt
     default_prompt = (
@@ -157,21 +130,24 @@ def main():
         "assume that the start and end time are today if the start time listed is after our current date time of " + str(datetime.datetime.now()) + 
         ", otherwise assume the start and end time are the next day. Always make sure the start and end date are the same day if no explicit end date was given. If there is no explicit end time "
         "given then guess the amount of time the event would take place, with it being usually in increments of 30 minutes to an hour. "
-        "Then output everything in the following format:\nName=\nLocation=\nStartTime=\nEndTime=\nStartDate=\nEndDate=\n"
+        "Then output everything in the following format and don't include your reasoning:\nName=\nLocation=\nStartTime=\nEndTime=\nStartDate=\nEndDate=\n"
         # "Please also write down your reasoning for the start and end date\n"
         "Here is the text I want you to analyze:\n"
     )
 
+    #Analyzing text
+    user_input = "12 pm"
+
     # Combine structured prompt with user input or use placeholder
-    final_prompt = default_prompt + (args.prompt if args.prompt else "[Insert text here]")
+    final_prompt = default_prompt + user_input
 
     messages = [
         {"role": "system", "content": args.system_prompt},
         {"role": "user", "content": final_prompt},
     ]
 
-    print(Colors.BOLD + "🧠: Using system prompt: " + args.system_prompt + Colors.END)
-    print(Colors.GREEN + f"\nYou: {final_prompt}" + Colors.END)
+    # print(Colors.BOLD + "🧠: Using system prompt: " + args.system_prompt + Colors.END)
+    # print(Colors.GREEN + f"\nYou: {final_prompt}" + Colors.END)
 
     response = get_completion(client, model_id, messages, args)
     
