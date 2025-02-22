@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Omni Screenshot to Calendar",
+  "version": "1.0",
+  "permissions": [
+      "identity",
+      "storage",
+      "activeTab",
+      "scripting"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "oauth2": {
+      "client_id": "86367282394-rmq233nk1mcf1du6es2olh66a5h2fbvo.apps.googleusercontent.com",
+      "scopes": ["email", "https://www.googleapis.com/auth/calendar.events"]
+  },
+  "background": {
+      "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icons/icon.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["cropper.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
