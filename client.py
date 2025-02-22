@@ -150,20 +150,19 @@ def main():
     # print(Colors.GREEN + f"\nYou: {final_prompt}" + Colors.END)
 
     response = get_completion(client, model_id, messages, args)
+
+    formatted_output = ""
     
     if response:
         if args.stream:
-            print(Colors.BLUE + "\n", end="")
             for chunk in response:
                 if chunk.choices[0].delta.content:
-                    print(chunk.choices[0].delta.content, end="")
-            print(Colors.END)
-        else:
-            for i, response in enumerate(response.choices):
-                print(
-                    Colors.BLUE + f"\n{response.message.content}" + Colors.END,
-                    sep="",
-                )
+                    formatted_output += str(chunk.choices[0].delta.content)
+        # else:
+        #     for i, response in enumerate(response.choices):
+        #         formatted_output += str(response.message.content)
+    
+    print(formatted_output)
 
 
 if __name__ == "__main__":
