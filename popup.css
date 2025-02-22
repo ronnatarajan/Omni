@@ -1,0 +1,33 @@
+body {
+  width: 350px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+button {
+  padding: 10px;
+  background: #4285F4;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: #357ae8;
+}
+
+#image-container,
+#cropped-container {
+  margin-top: 10px;
+}
+
+img {
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
