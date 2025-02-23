@@ -1,9 +1,21 @@
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("googleSignIn").addEventListener("click", function () {
-      chrome.runtime.sendMessage({ action: "get_google_token" });
+document.getElementById("sign-in").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "sign_in" }, (response) => {
+      if (response && response.success) {
+          console.log("Signed in successfully. Token:", response.token);
+          alert("Signed in successfully!");
+      } else {
+          console.error("Sign-in failed.");
+      }
   });
+});
 
-  document.getElementById("captureScreen").addEventListener("click", function () {
-      chrome.runtime.sendMessage({ action: "capture_screen" });
+document.getElementById("capture-button").addEventListener("click", function () {
+  chrome.runtime.sendMessage({ action: "capture_screen" }, (response) => {
+      if (response && response.success) {
+          console.log("Screenshot captured successfully.");
+          window.open("cropper.html", "_blank", "width=800,height=600");
+      } else {
+          console.error("Failed to capture screenshot.");
+      }
   });
 });
