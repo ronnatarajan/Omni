@@ -2,37 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crop Image</title>
     <link rel="stylesheet" href="libs/cropper.min.css">
-    <style>
-      body {
-          text-align: center;
-          font-family: Arial, sans-serif;
-      }
-      #crop-container {
-          max-width: 90%;
-          margin: auto;
-      }
-      img {
-          max-width: 100%;
-      }
-      button {
-          padding: 10px;
-          margin: 10px;
-          background: #4285F4;
-          color: white;
-          border: none;
-          cursor: pointer;
-      }
-      button:hover {
-          background: #357ae8;
-      }
-  </style>
-  </head>
-<body>
-    <img id="imageToCrop">
-    <button id="confirmCrop">Confirm Crop</button>
     <script src="libs/cropper.min.js"></script>
-    <script src="cropper.js"></script>
+    <script src="cropper.js" defer></script>
+</head>
+<body>
+    <h1>Crop Image</h1>
+    <img id="image-to-crop" alt="Image to Crop">
+    <button id="crop-button">Crop & Upload</button>
 </body>
 </html>
