@@ -72,7 +72,7 @@ def upload_image():
             end_date=final_end_date, 
             guests=[{'email': 'madhavsv05@gmail.com'},],
             recurring='WEEKLY', 
-            amountRecur='COUNT=3'
+            amountRecur='COUNT=1'
         )
 
         print(event_data)

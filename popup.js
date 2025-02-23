@@ -9,7 +9,7 @@ document.getElementById("sign-in").addEventListener("click", function () {
   });
 });
 
-document.getElementById("capture-button").addEventListener("click", function () {
+document.getElementById("capture").addEventListener("click", function () {
   chrome.runtime.sendMessage({ action: "capture_screen" }, (response) => {
       if (response && response.success) {
           console.log("Screenshot captured successfully.");

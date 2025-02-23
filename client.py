@@ -121,24 +121,28 @@ def analyze_text(user_input):
 
 
     # Default structured prompt
+    print(str(date_today))
     default_prompt = (
         "Given a set of text which will be at the bottom of this request, can you identify the title of the event, "
         "the location of the event, and the start and end time of the event. Give the start time and end time "
         "in a 24 hour time format, with time only in hours and minutes. If there is no explicit end time "
         "given then guess the amount of time the event would take place, with it being in increments "
         "of 30 minutes to an hour. The end time also has to always be after the start time. "
-        "Give the start and end date in YYYY-MM-DD format. " 
+        "Give the start and end date in YYYY-MM-DD format. The start date must never be before the day " + str(date_today) + ". "
+        "To check this, use strcmp(" + str(date_today) + ", date you guessed"+ ") of the two dates. " 
+        "If the result is positive, then this is an invalid value. Make certain that the result is either negative or zero. "
         "If a specific date in some formate of YYYY, MM, and DD then immeaditely use that date and format it in the YYYY-MM-DD format. "
-        "If a specific date is NOT listed but a day of the week is listed, use the current day of the week as a base, which is " + days[weekday_number] + ", "
+        "If a specific date is NOT listed but a day of the week is listed, use the current day of the week as a base, which is " + str(days[weekday_number]) + ", "
         "and then if the given weekday is the same as the current weekday, then simply use the current date in YYYY-MM-DD format. Otherwise "
-        "find the next closest proceeding weekday and give its specific date in YYYY-MM-DD format. If key words such as next are used, increment the specific date by the amount of time listed, " +
+        "find the next closest weekday after our current day (" + str(date_today) + ") and give its specific date in YYYY-MM-DD format. If key words such as next are used, increment the specific date by the amount of time listed, " +
         "i.e. stating 'next week' corresponds to 7 days later from the found date and 'next month' is the next month over on the same weekday. "
-        "If there is no explicit date and no explicit weekday stated, assume that the start and end date are today, which is " + est_time +
-        ". If the given start time listed is after our current date time of " + est_time +
-        " use the current date of " + date_today + ", otherwise assume the start and end time occur on the next day which is " + date_tomorrow + 
+        "If there is no explicit date and no explicit weekday stated, assume that the start and end date are today, which is " + str(est_time) +
+        ". If the given start time listed is after our current date time of " + str(est_time) +
+        " use the current date of " + str(date_today) + ", otherwise assume the start and end time occur on the next day which is " + str(date_tomorrow) + 
         # "Always make sure the start and end date are the same day if no explicit end date was given."
         "Then output everything in the following format and don't include your reasoning:\nName=\nLocation=\nStartTime=\nEndTime=\nStartDate=\nEndDate=\n"
         "Here is the text I want you to analyze:\n"
+        
     )
 
     #Analyzing text
@@ -160,5 +164,8 @@ def analyze_text(user_input):
             for chunk in response:
                 if chunk.choices[0].delta.content:
                     formatted_output += str(chunk.choices[0].delta.content)
-    
+    print("==============================")
+    print(formatted_output)
+    print("==============================")
+
     return formatted_output
