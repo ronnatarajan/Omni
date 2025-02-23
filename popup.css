@@ -13,11 +13,11 @@
   box-sizing: border-box;
   font-family: 'Trebuchet MS', sans-serif;
 }
-
+ 
 body {
   width: 200px;  /* Define popup width */
   padding: 3px;
-  background-color: #d3b485;
+  background-color: #d3b486;
   /* background-color: #FFFFFF; */
   text-align: center;
   border: none;
