@@ -1,4 +1,7 @@
 import modal
+import numpy as np
+import cv2
+from ocr import get_text
 
 # Initialize Modal App
 stub = modal.App("omni-llama-api")
@@ -33,10 +36,11 @@ async def process_image(data: dict):
     token = data.get("token")
 
     # Convert image from Base64
-    image = Image.open(BytesIO(base64.b64decode(base64_image)))
+    image_bytes = base64.b64.decode(base64_image)
+    image = cv2.imdecode(np.frombuffer(image_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
 
     # Extract text from image
-    extracted_text = pytesseract.image_to_string(image)
+    extracted_text = get_text(image)
 
     # Use Llama 3 to extract event details
     response = Llama(model_path="/models/llama-3-8b.Q4_K_M.gguf").create_completion(
