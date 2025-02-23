@@ -25,7 +25,7 @@ def get_completion(client, model_id, messages, args):
     return response
 
 
-def analyze_text():
+def analyze_text(user_input):
     parser = argparse.ArgumentParser(description="OpenAI Client CLI")
     
     parser.add_argument(
@@ -120,10 +120,10 @@ def analyze_text():
     )
 
     #Analyzing text
-    user_input = ("( Oo Madhav Valiyaparambil <vpmadhav@gmail.com>"
-                "ee tome +"
-                "Yo Saket,"
-                "Wanna meet up at 12:00 at Krach to Study for a little bit")
+    # user_input = ("( Oo Madhav Valiyaparambil <vpmadhav@gmail.com>"
+    #             "ee tome +"
+    #             "Yo Saket,"
+    #             "Wanna meet up at 12:00 at Krach to Study for a little bit")
 
     # Combine structured prompt with user input or use placeholder
     final_prompt = default_prompt + user_input
