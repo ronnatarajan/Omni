@@ -1,35 +1,57 @@
-import datetime
+from datetime import datetime
 import os.path
+from datetime import timedelta
+
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import pytz
 
 # If modifying these scopes, delete the file token.json.
 # SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
-def create_event(title, description, start_date, end_date, guests, timezone='America/Indianapolis', location=' ', recurrence=[], recurring=' ', amountRecur=' '):
-  creds = None
+START = datetime.now(pytz.timezone('America/New_York')).strftime('%Y-%m-%dT%H:%M:%S')
+END = (datetime.now(pytz.timezone('America/New_York')) + timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%S')
+
+def create_event(title, description="(Omni Generated Empty Description)", start_date=START, end_date=END, guests="", timezone='America/Indianapolis', location=' ', recurrence=[], recurring=' ', amountRecur=' '):
+  if not title or len(title) < 1:
+    title = 'Omni-Title'
+
+  if not description or len(description) < 1:
+    title = "(Omni Generated Empty Description)"
+
+  if not start_date or len(start_date) < 1:
+    start_date = "(Omni Generated Empty Date)"
+
+  if not end_date or len(end_date) < 1:
+    end_date = "(Omni Generated Empty Date)"
+
+  if len(start_date) != 19:
+    start_date = start_date[0:19]
+  if len(end_date) != 19:
+    end_date = end_date[0:19]
+  # creds = None
   # The file token.json stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
   # time.
-  if os.path.exists("token.json"):
-    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-  # If there are no (valid) credentials available, let the user log in.
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-      creds.refresh(Request())
-    else:
-      flow = InstalledAppFlow.from_client_secrets_file(
-          "credentials.json", SCOPES
-      )
-      creds = flow.run_local_server(port=0)
-    # Save the credentials for the next run
-    with open("token.json", "w") as token:
-      token.write(creds.to_json())
+  # if os.path.exists("token.json"):
+  #   creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  # # If there are no (valid) credentials available, let the user log in.
+  # if not creds or not creds.valid:
+  #   if creds and creds.expired and creds.refresh_token:
+  #     creds.refresh(Request())
+  #   else:
+  #     flow = InstalledAppFlow.from_client_secrets_file(
+  #         "credentials.json", SCOPES
+  #     )
+    #   creds = flow.run_local_server(port=0)
+    # # Save the credentials for the next run
+    # with open("token.json", "w") as token:
+    #   token.write(creds.to_json())
     
   if recurring != ' ':
     if amountRecur != ' ':
@@ -39,7 +61,7 @@ def create_event(title, description, start_date, end_date, guests, timezone='Ame
     
 
   try:
-    service = build("calendar", "v3", credentials=creds)
+    # service = build("calendar", "v3", credentials=creds)
 
     event = {
       'summary': title,
@@ -63,9 +85,9 @@ def create_event(title, description, start_date, end_date, guests, timezone='Ame
         ],
       },
     }
-
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print('Event created: %s' % (event.get('htmlLink')))
+    return event
+    # event = service.events().insert(calendarId='primary', body=event).execute()
+    # print('Event created: %s' % (event.get('htmlLink')))
 
   except HttpError as error:
     print(f"An error occurred: {error}")
