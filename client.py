@@ -1,7 +1,8 @@
 import argparse
 import modal
 from openai import OpenAI
-import datetime
+from datetime import datetime
+import pytz
 
 
 def get_completion(client, model_id, messages, args):
@@ -111,8 +112,8 @@ def analyze_text(user_input):
     default_prompt = (
         "Given a set of text, can you identify the name of the event, "
         "the location of the event, and the start and end time of the event, where the start time and end time "
-        "are given in a 24 hour time format, along with the date in YYYY-MM-DD format, If there is no explicit date given "
-        "assume that the start and end time are today if the start time listed is after our current date time of " + str(datetime.datetime.now()) + 
+        "are given in a 24 hour time format, with time only in hours and minutes , along with the date in YYYY-MM-DD format, If there is no explicit date given "
+        "assume that the start and end time are today if the start time listed is after our current date time of " + datetime.now(pytz.timezone('America/New_York')).strftime('%Y-%m-%dT%H:%M:%S') + 
         ", otherwise assume the start and end time are the next day. Always make sure the start and end date are the same day if no explicit end date was given. If there is no explicit end time "
         "given then guess the amount of time the event would take place, with it being usually in increments of 30 minutes to an hour, and the end time has to be after the start time"
         "Then output everything in the following format and don't include your reasoning:\nName=\nLocation=\nStartTime=\nEndTime=\nStartDate=\nEndDate=\n"

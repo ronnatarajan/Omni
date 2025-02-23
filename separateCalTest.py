@@ -18,8 +18,8 @@ def main():
     items = formatted_text.split("\n")
     final_start_date = items[4] + "T" + items[2] + ":00"
     final_end_date = items[5] + "T" + items[3] + ":00"
-    print(f"title={items[0]}, location={items[1]}, description=None, start_date={final_start_date}, end_date={final_end_date}, guests=['email': 'madhavsv05@gmail.com'], recurring='WEEKLY', amountRecur='COUNT=3'")
-    create_event(title=items[0], location=items[1], description=' ', start_date=final_start_date, end_date=final_end_date, guests=[{'email': 'madhavsv05@gmail.com'},], recurring='WEEKLY', amountRecur='COUNT=3')
+    print("title=Study Session, location=Krach, description=None, start_date=2025-02-23T12:00:00, end_date=2025-02-23T13:30:00, guests=['email': 'madhavsv05@gmail.com'], recurring='WEEKLY', amountRecur='COUNT=3'")
+    event = create_event(title="Study Session", location="Krach", description=' ', start_date="2025-02-23T12:00:00", end_date="2025-02-23T13:30:00", guests=[{'email': 'madhavsv05@gmail.com'},], recurring='WEEKLY', amountRecur='COUNT=3')
 
 if __name__ == "__main__":
   main()
