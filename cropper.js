@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         let croppedImageDataURL = croppedCanvas.toDataURL("image/png");
+        // Ensure correct Base64 encoding
+        const base64Image = croppedImageDataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 
         if (!window.googleToken) {
             console.error("Google OAuth token not found.");
@@ -33,13 +35,15 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                image: croppedImageDataURL
+                image: base64Image,
+                token: window.googleToken
             })
         })
         .then(response => response.json())
         .then(data => {
             console.log("API Response:", data);
-            alert("Image and token sent successfully!");
+            // alert(JSON.stringify(data, null, 2));
+            alert("Image and token sent successfully!", data);
             window.close();
         })
         .catch(error => {
