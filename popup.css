@@ -17,7 +17,7 @@
 body {
   width: 200px;  /* Define popup width */
   padding: 3px;
-  background-color: #d3b486;
+  background-color: #000000FF;
   /* background-color: #FFFFFF; */
   text-align: center;
   border: none;
@@ -48,23 +48,23 @@ button {
 }
 
 h1 {
-  color: #000000;
+  color: #df1e51;
 }
 
 h2 {
-  color: #575350;
+  color: #b81942;
 }
 
 /* Google Sign-In Button */
 #capture {
-  background-color: #83a28a;
+  background-color: #df1e51;
   color: white;
 }
 
 #capture:hover {
-  background-color: #64846c;
+  background-color: #b81942;
 }
 
 #sign-in:hover {
-  background-color: #e4ebea;
+  background-color: #d7d4d4;
 }
