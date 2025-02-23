@@ -4,17 +4,6 @@ from openai import OpenAI
 import datetime
 
 
-class Colors:
-    """ANSI color codes"""
-
-    GREEN = "\033[0;32m"
-    RED = "\033[0;31m"
-    BLUE = "\033[0;34m"
-    GRAY = "\033[0;90m"
-    BOLD = "\033[1m"
-    END = "\033[0m"
-
-
 def get_completion(client, model_id, messages, args):
     completion_args = {
         "model": model_id,
@@ -32,15 +21,11 @@ def get_completion(client, model_id, messages, args):
 
     completion_args = {k: v for k, v in completion_args.items() if v is not None}
 
-    try:
-        response = client.chat.completions.create(**completion_args)
-        return response
-    except Exception as e:
-        print(Colors.RED, f"Error during API call: {e}", Colors.END, sep="")
-        return None
+    response = client.chat.completions.create(**completion_args)
+    return response
 
 
-def main():
+def analyze_text():
     parser = argparse.ArgumentParser(description="OpenAI Client CLI")
     
     parser.add_argument(
@@ -129,14 +114,16 @@ def main():
         "are given in a 24 hour time format, along with the date in YYYY-MM-DD format, If there is no explicit date given "
         "assume that the start and end time are today if the start time listed is after our current date time of " + str(datetime.datetime.now()) + 
         ", otherwise assume the start and end time are the next day. Always make sure the start and end date are the same day if no explicit end date was given. If there is no explicit end time "
-        "given then guess the amount of time the event would take place, with it being usually in increments of 30 minutes to an hour. "
+        "given then guess the amount of time the event would take place, with it being usually in increments of 30 minutes to an hour, and the end time has to be after the start time"
         "Then output everything in the following format and don't include your reasoning:\nName=\nLocation=\nStartTime=\nEndTime=\nStartDate=\nEndDate=\n"
-        # "Please also write down your reasoning for the start and end date\n"
         "Here is the text I want you to analyze:\n"
     )
 
     #Analyzing text
-    user_input = "12 pm"
+    user_input = ("( Oo Madhav Valiyaparambil <vpmadhav@gmail.com>"
+                "ee tome +"
+                "Yo Saket,"
+                "Wanna meet up at 12:00 at Krach to Study for a little bit")
 
     # Combine structured prompt with user input or use placeholder
     final_prompt = default_prompt + user_input
@@ -145,9 +132,6 @@ def main():
         {"role": "system", "content": args.system_prompt},
         {"role": "user", "content": final_prompt},
     ]
-
-    # print(Colors.BOLD + "🧠: Using system prompt: " + args.system_prompt + Colors.END)
-    # print(Colors.GREEN + f"\nYou: {final_prompt}" + Colors.END)
 
     response = get_completion(client, model_id, messages, args)
 
@@ -158,12 +142,5 @@ def main():
             for chunk in response:
                 if chunk.choices[0].delta.content:
                     formatted_output += str(chunk.choices[0].delta.content)
-        # else:
-        #     for i, response in enumerate(response.choices):
-        #         formatted_output += str(response.message.content)
     
-    print(formatted_output)
-
-
-if __name__ == "__main__":
-    main()
+    return formatted_output
