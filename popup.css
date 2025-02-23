@@ -1,33 +1,55 @@
-body {
-  width: 350px;
-  text-align: center;
-  font-family: Arial, sans-serif;
+/* Reset default margin/padding */
+* {
+  margin: 3px;
+  padding: 3px;
+  box-sizing: border-box;
+  font-family: 'Trebuchet MS', sans-serif;
 }
 
-h2 {
-  font-size: 18px;
+body {
+  width: 200px;  /* Define popup width */
+  padding: 3px;
+  background-color: #d3b485;
+  /* background-color: #FFFFFF; */
+  text-align: center;
+  border: none;
+}
+
+.container {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center;
+  border: none;
 }
 
 button {
-  padding: 10px;
-  background: #4285F4;
-  color: white;
+  width: 90%; /* Make buttons take full width */
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 12px;
   border: none;
+  border-radius: 25px; /* Rounded buttons */
+  font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
-button:hover {
-  background: #357ae8;
+h1 {
+  color: #000000;
 }
 
-#image-container,
-#cropped-container {
-  margin-top: 10px;
+h2 {
+  color: #575350;
 }
 
-img {
-  max-width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+/* Google Sign-In Button */
+#capture {
+  background-color: #83a28a;
+  color: white;
+}
+
+#capture:hover {
+  background-color: #64846c;
+}
+#sign-in:hover {
+  background-color: #e4ebea;
 }

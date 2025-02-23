@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Omni Screenshot to Calendar",
+  "name": "Omni: Screenshot to Calendar",
   "version": "1.0",
   "permissions": [
       "identity",
